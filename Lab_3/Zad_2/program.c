@@ -19,14 +19,15 @@ void * funkcja_watku(void* atrybut)
 int main()
 {
     pthread_t tid_tab[TAB_SIZE];
+    int index[TAB_SIZE] = {0};
     int i;
     void *wynik;
 
     for(i = 0; i < TAB_SIZE; i++)
     {
-        printf("Utworzono wątek o wewnętrzynm ID: %d\n",i);
+        index[i] = i;
+        printf("Utworzono wątek o wewnętrzynm ID: %d\n",index[i]);
         pthread_create(&tid_tab[i], NULL, funkcja_watku, &i);
-        sleep(2);  //Usunąć w celu zobaczenia błędu z przekazaniem parametru
     }
 
     for(i = 0; i < TAB_SIZE; i++)

@@ -5,12 +5,12 @@ CCOMP = gcc
 LOADER = gcc
 
 # Dodatkowe biblioteki (matematyczna)
-LIBS = -lm
+LIBS = -lm -pthread
 
 OPT = -g -DDBUG
 
-program: program.o
-	$(LOADER) $(OPT) program.o -o  program  $(LIBS)
+program123: program.o
+	$(LOADER) $(OPT) program.o -o  program123 $(LIBS)
  
 program.o: program.c
 	$(CCOMP) -c $(OPT) program.c

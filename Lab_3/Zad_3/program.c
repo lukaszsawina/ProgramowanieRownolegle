@@ -46,17 +46,13 @@ int main()
     Osoba osoba_lok = {30, 172.6, 86.4};
 
     pthread_create(&tid_1, NULL, funkcja_watku_z_wsk, &osoba_wsk);
-    sleep(2);
     pthread_create(&tid_2, NULL, funkcja_watku_z_wsk, &osoba_wsk);
-    sleep(2);
 
     pthread_join(tid_1, NULL);
     pthread_join(tid_2, NULL);
 
     pthread_create(&tid_1, NULL, funkcja_watku_z_lok, &osoba_lok);
-    sleep(2);
     pthread_create(&tid_2, NULL, funkcja_watku_z_lok, &osoba_lok);
-    sleep(2);
 
     pthread_join(tid_1, NULL);
     pthread_join(tid_2, NULL);
