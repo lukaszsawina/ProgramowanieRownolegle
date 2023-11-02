@@ -8,7 +8,7 @@ LOADER = gcc
 # wersja do debugowania
 #OPT = -g -DDEBUG
 # wersja zoptymalizowana do mierzenia czasu
-OPT = -O3 -fopenmp
+OPT = -g -fopenmp
 
 # pliki naglowkowe
 INC = -I./include

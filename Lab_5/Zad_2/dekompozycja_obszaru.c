@@ -4,6 +4,7 @@
 #include<math.h>
 
 typedef struct CalkowaniePodobszar {
+  int ID;
   double a;
   double b;
   double dx;
@@ -41,6 +42,7 @@ double calka_dekompozycja_obszaru(double a, double b, double dx, int l_w){
       podobszary[i].a = my_start;
       podobszary[i].b = my_end;
       podobszary[i].dx = dx;
+      podobszary[i].ID = i;
 
     pthread_create( &watki[i], NULL, calka_podobszar_w, &podobszary[i]);
   }
@@ -54,6 +56,7 @@ double calka_dekompozycja_obszaru(double a, double b, double dx, int l_w){
     free(calka_podobszaru);
   }
 
+  free(podobszary);
   
   return(calka_suma_local);
 }
@@ -61,14 +64,13 @@ double calka_dekompozycja_obszaru(double a, double b, double dx, int l_w){
 
 
 void* calka_podobszar_w(void* arg_wsk){
-
-  CalkowaniePodobszar* podobszar = (CalkowaniePodobszar *) arg_wsk;
-
-  double a_local = podobszar->a, b_local = podobszar->b, dx=podobszar->dx;
+  
   // rozpakowanie danych przesłanych do wątku
+  CalkowaniePodobszar* podobszar = (CalkowaniePodobszar *) arg_wsk;
+  double a_local = podobszar->a, b_local = podobszar->b, dx=podobszar->dx;
 
-  pthread_t my_id = pthread_self(); // skąd pobierany?
-  printf("\nWątek %ld: a_local %lf, b_local %lf, dx %lf\n", 
+  int my_id = podobszar->ID; // skąd pobierany?
+  printf("\nWątek %d: a_local %lf, b_local %lf, dx %lf\n", 
 	 my_id, a_local, b_local, dx);
 
   int N = ceil((b_local-a_local)/dx);
