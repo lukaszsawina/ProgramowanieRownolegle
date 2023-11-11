@@ -1,13 +1,22 @@
 public class Watek extends Thread{
+    private int ID;
+    private Obraz obraz;
+    public Watek(int id, Obraz n_obraz)
+    {
+        ID = id;
+        obraz = n_obraz;
+    }
 
-    public Watek(int id, Obraz obraz)
+    public void run()
     {
         obraz.calculate_histogram_parallel(
                 0, obraz.getSizeN(), 1,
                 0, obraz.getSizeM(), 1,
-                id, id+1, 1);
+                ID, ID+1, 1);
 
-        obraz.better_print_histogram(id, id);
+        synchronized (obraz){
+            obraz.better_print_histogram(ID, ID);
+        }
     }
 
 }

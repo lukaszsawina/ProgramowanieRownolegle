@@ -11,9 +11,9 @@ public class WatekRunnable1D implements Runnable{
     }
 
     public void run() {
-        obraz.calculate_histogram_parallel(
+        obraz.calculate_histogram_parallel_zabezpieczone(
                 ID, obraz.getSizeN(), l_w,
                 0, obraz.getSizeM(), 1,
-                0, 94, 1);
+                0, 12, 1);
     }
 }

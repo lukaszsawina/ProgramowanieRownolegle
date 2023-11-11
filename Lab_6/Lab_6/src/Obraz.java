@@ -10,6 +10,7 @@ class Obraz {
     private int[] histogram;
     private int[] hist_parallel;
 
+
     public int getSizeM()
     {
         return size_m;
@@ -24,18 +25,18 @@ class Obraz {
         this.size_n = n;
         this.size_m = m;
         tab = new char[n][m];
-        tab_symb = new char[94];
+        tab_symb = new char[12];
 
         final Random random = new Random();
 
         // for general case where symbols could be not just integers
-        for(int k=0;k<94;k++) {
+        for(int k=0;k<12;k++) {
             tab_symb[k] = (char)(k+33); // substitute symbols
         }
 
         for(int i=0;i<n;i++) {
             for(int j=0;j<m;j++) {
-                tab[i][j] = tab_symb[random.nextInt(94)];  // ascii 33-127
+                tab[i][j] = tab_symb[random.nextInt(12)];  // ascii 33-127
                 //tab[i][j] = (char)(random.nextInt(94)+33);  // ascii 33-127
                 System.out.print(tab[i][j]+" ");
             }
@@ -43,14 +44,14 @@ class Obraz {
         }
         System.out.print("\n\n");
 
-        histogram = new int[94];
-        hist_parallel = new int[94];
+        histogram = new int[12];
+        hist_parallel = new int[12];
         clear_histogram();
     }
 
     public void clear_histogram(){
 
-        for(int i=0;i<94;i++)
+        for(int i=0;i<12;i++)
         {
             histogram[i]=0;
             hist_parallel[i]=0;
@@ -69,7 +70,7 @@ class Obraz {
 
                 // wersja bardziej ogĂłlna dla tablicy symboli nie utoĹźsamianych z indeksami
                 // tylko dla tej wersji sensowne jest zrĂłwnoleglenie w dziedzinie zbioru znakĂłw ASCII
-                for(int k=0;k<94;k++) {
+                for(int k=0;k<12;k++) {
                     if(tab[i][j] == tab_symb[k]) histogram[k]++;
                     //if(tab[i][j] == (char)(k+33)) histogram[k]++;
                 }
@@ -82,7 +83,6 @@ class Obraz {
     public void calculate_histogram_parallel(int start_wiersz, int end_wiersz, int skok_wiersz,
                             int start_kol, int end_kol, int skok_kol,
                             int start_znak, int end_znak, int skok_znak){
-
       for(int i=start_wiersz;i<end_wiersz;i+=skok_wiersz) {
          for(int j=start_kol;j<end_kol;j+=skok_kol) {
             for(int k=start_znak;k<end_znak;k+=skok_znak) {
@@ -92,9 +92,29 @@ class Obraz {
       }
     }
 
+    public void calculate_histogram_parallel_zabezpieczone(int start_wiersz, int end_wiersz, int skok_wiersz,
+                                             int start_kol, int end_kol, int skok_kol,
+                                             int start_znak, int end_znak, int skok_znak){
+        int [] lok_hist = new int[12];
+
+        for(int i=start_wiersz;i<end_wiersz;i+=skok_wiersz) {
+            for(int j=start_kol;j<end_kol;j+=skok_kol) {
+                for(int k=start_znak;k<end_znak;k+=skok_znak) {
+                    if (tab[i][j] == tab_symb[k]) lok_hist[k]++;
+                }
+            }
+        }
+
+        synchronized(hist_parallel)
+        {
+            for(int i = 0; i < 12; i++)
+                hist_parallel[i] += lok_hist[i];
+        }
+    }
+
     public void print_histogram(){
 
-        for(int i=0;i<94;i++) {
+        for(int i=0;i<12;i++) {
             System.out.print(tab_symb[i]+" "+histogram[i]+"\n");
             //System.out.print((char)(i+33)+" "+histogram[i]+"\n");
         }
@@ -103,7 +123,7 @@ class Obraz {
 
     public void prittier_print_histogram()
     {
-        for(int i = 0; i < 94; i++)
+        for(int i = 0; i < 12; i++)
         {
             char znak = tab_symb[i];
             System.out.print("Znak: " + znak + " ");
@@ -128,7 +148,7 @@ class Obraz {
     public void sprawdz_wynik()
     {
         boolean czy_poprawne = true;
-        for(int i = 0; i < 94; i++)
+        for(int i = 0; i < 12; i++)
             if(hist_parallel[i] != histogram[i])
             {
                 czy_poprawne = false;

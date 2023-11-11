@@ -1,23 +1,28 @@
-import static java.lang.Math.ceil;
-
-public class WatekRunnable2D implements Runnable{
+public class WatekRunnable2D implements Runnable {
 
     private Obraz obraz;
-    private int ID;
-    private int start;
-    private int end;
-    public WatekRunnable2D(int id, int n_start, int n_end, Obraz n_obraz)
+    int w_start;
+    int w_end;
+    int k_start;
+    int k_end;
+
+    public WatekRunnable2D(Obraz n_obraz, int nw_start, int nw_end, int nk_start, int nk_end)
     {
         obraz = n_obraz;
-        ID = id;
-        start = n_start;
-        end = n_end;
+        w_start = nw_start;
+        w_end = nw_end;
+        k_start = nk_start;
+        k_end = nk_end;
     }
 
+
+    @Override
     public void run() {
-        obraz.calculate_histogram_parallel(
-                0, obraz.getSizeN(), 1,
-                start, end, 1,
-                0, 94, 1);
+        obraz.calculate_histogram_parallel_zabezpieczone(
+                w_start, w_end, 1,
+                k_start, k_end, 1,
+                0, 12, 1);
     }
+
+
 }
