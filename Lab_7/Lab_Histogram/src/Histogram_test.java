@@ -25,8 +25,6 @@ class Histogram_test {
 
         ExecutorService executor = Executors.newFixedThreadPool(num_threads);
 
-        WatekRunnable2D[] watekRunnable = new WatekRunnable2D[num_threads];
-
         int w_offset = (int)ceil(obraz_1.getSizeN()/((double)num_threads/2));
         int k_offset = (int)ceil(obraz_1.getSizeM()/((double)num_threads/2));
 
@@ -43,8 +41,8 @@ class Histogram_test {
                 if(k_end > obraz_1.getSizeM())
                     k_end = obraz_1.getSizeM();
 
-                watekRunnable[i] = new WatekRunnable2D(obraz_1, w_start, w_end, k_start, k_end);
-                executor.execute(watekRunnable[i]);
+                WatekRunnable2D watekRunnable = new WatekRunnable2D(obraz_1, w_start, w_end, k_start, k_end);
+                executor.execute(watekRunnable);
             }
         }
 

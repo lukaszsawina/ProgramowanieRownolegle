@@ -6,7 +6,7 @@ public class LepszaCalka {
     static double xs = 0;
     static double xe = Math.PI;
     static double dx = 0.000001;
-    private static final int NTHREADS = 10;
+    private static final int NTHREADS = 4;
     private static final int NTASK = 40;
 
     public static void main(String[] args)
