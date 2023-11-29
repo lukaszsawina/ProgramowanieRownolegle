@@ -48,21 +48,22 @@ void inicjuj(czytelnia_t* czytelnia_p){
 }
 
 void czytam(czytelnia_t* czytelnia_p){
-
+    pthread_mutex_lock(&czytelnia_p->mutex);
 // wypisanie wartości zmiennych kontrolujących działanie: liczby czytelników i pisarzy
     printf("Liczba czytających %d, piszących: %d\n", czytelnia_p->liczba_czyt, czytelnia_p->liczba_pis);
+    
 
 // sprawdzenie warunku poprawności i ewentualny exit
     if( czytelnia_p->liczba_pis>1 || (czytelnia_p->liczba_pis==1 && czytelnia_p->liczba_czyt>0) || czytelnia_p->liczba_pis<0 || czytelnia_p->liczba_czyt<0 ) 
     { 
         printf("Warunek czytania niespełniony\n"); exit(0); 
     }
-
+    pthread_mutex_unlock(&czytelnia_p->mutex);
     usleep(rand()%300000);
 }
 
 void pisze(czytelnia_t* czytelnia_p){
-
+    pthread_mutex_lock(&czytelnia_p->mutex);
 // wypisanie wartości zmiennych kontrolujących działanie: liczby czytelników i pisarzy
     printf("Liczba czytających %d, piszących: %d\n", czytelnia_p->liczba_czyt, czytelnia_p->liczba_pis);
 
@@ -72,7 +73,7 @@ void pisze(czytelnia_t* czytelnia_p){
     { 
         printf("Warunek pisania niespełniony\n"); exit(0); 
     }
-
+    pthread_mutex_unlock(&czytelnia_p->mutex);
     usleep(rand()%300000);
 }
 

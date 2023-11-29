@@ -6,6 +6,8 @@ typedef struct {
   // <- zasoby czytelni
   int liczba_czyt;
   int liczba_pis;
+  int o_c;
+  int o_p;
   pthread_cond_t cond_c;
   pthread_cond_t cond_p;
   pthread_mutex_t mutex;

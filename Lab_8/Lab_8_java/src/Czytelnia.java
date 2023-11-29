@@ -10,6 +10,8 @@ public class Czytelnia {
     private Lock lock ;
     private Condition condC;
     private Condition condP;
+    private int o_p = 0;
+    private int o_c = 0;
 
     public void init()
     {
@@ -23,8 +25,10 @@ public class Czytelnia {
         lock.lock();
 
         try {
-            while (liczba_pis > 0 /*Tutaj brakuje czegoś*/) {
-                condC.await();
+            if (liczba_pis > 0 || o_p > 0) {
+                o_c++;
+                condC.wait();
+                o_c--;
             }
 
             liczba_czyt++;
@@ -57,9 +61,8 @@ public class Czytelnia {
         try {
             liczba_czyt--;
 
-
             if (liczba_czyt == 0) {
-                lock.notifyAll();
+                condP.signal();
             }
         } finally {
             lock.unlock();
@@ -72,7 +75,9 @@ public class Czytelnia {
 
         try {
             if (liczba_czyt + liczba_pis > 0) {
-                condP.await();
+                o_p++;
+                condP.wait();
+                o_p--;
             }
 
             liczba_pis++;
@@ -104,10 +109,10 @@ public class Czytelnia {
         try {
             liczba_pis--;
 
-            if (condC != null) {
-                condC.await();
+            if (o_c > 0) {
+                condC.signal();
             } else {
-                condP.await();
+                condP.signal();
             }
         } finally {
             lock.unlock();
