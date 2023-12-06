@@ -24,23 +24,24 @@ int main ()
   omp_set_nested(1);
 
   double suma_parallel=0.0; int i,j;
-  double tab_lok_sum[WYMIAR];
-   for(int i=0;i<WYMIAR;i++)
+  double tab_lok_sum[3];
+   for(int i=0;i<3;i++)
       tab_lok_sum[i] = 0;
   
-   for(i=0;i<WYMIAR;i++) {
+   for(j=0;j<WYMIAR;j++) {
     int id_w = omp_get_thread_num();
     #pragma omp ordered
-    #pragma omp parallel for schedule(static,1) default(none) shared(a, tab_lok_sum, i) ordered
-    for(j=0;j<WYMIAR;j++) {
-      tab_lok_sum[i] += a[i][j];
+    #pragma omp parallel for schedule(static,1) default(none) shared(a, tab_lok_sum, j, id_w) ordered
+    for(i=0;i<WYMIAR;i++) {
+      tab_lok_sum[id_w] += a[i][j];
       #pragma omp ordered
-      printf("(%1d,%1d)-W_%1d ",i,j,omp_get_thread_num()); 
+      printf("(%1d,%1d)-W_%1d ",j,i,omp_get_thread_num()); 
     }
-
-    suma_parallel += tab_lok_sum[i];
     printf("\n");
   }  
+
+  for(i = 0; i < 3; i++)
+    suma_parallel += tab_lok_sum[i];
 
   printf("Suma wyrazów tablicy równolegle: %lf\n", suma_parallel);
 

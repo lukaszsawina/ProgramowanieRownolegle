@@ -35,6 +35,6 @@ int main ()
     printf("\n");
   }
 
-  printf("Suma wyrazĂłw tablicy rĂłwnolegle: %lf\n", suma_parallel);
+  printf("Suma wyrazów tablicy równolegle: %lf\n", suma_parallel);
 
 }

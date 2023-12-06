@@ -34,7 +34,7 @@ int main ()
     for(i=0;i<WYMIAR;i++) {
       suma_temp += a[i][j];
       #pragma omp ordered
-      printf("(%1d,%1d)-W_%1d ",i,j,omp_get_thread_num()); 
+      printf("(%1d,%1d)-W_%1d ",j,i,omp_get_thread_num()); 
     }
 
     #pragma omp critival
@@ -43,7 +43,8 @@ int main ()
     #pragma omp ordered
     printf("\n");
   }
-  #pragma omp barrier
+
+  
   printf("Suma wyrazów tablicy równolegle: %lf\n", suma_parallel);
 
 }

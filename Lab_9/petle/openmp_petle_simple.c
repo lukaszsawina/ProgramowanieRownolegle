@@ -26,16 +26,15 @@ int main ()
   // pÄtla do modyfikacji - docelowo rĂłwnolegĹa w OpenMP
   double suma_parallel=0.0;
   
-#pragma omp parallel for schedule(dynamic) default(none) shared(a) reduction(+:suma_parallel) ordered
+  #pragma omp parallel for default(none) shared(a) reduction(+:suma_parallel) ordered
   for(int i=0;i<WYMIAR;i++) {
     int id_w = omp_get_thread_num();
-#pragma omp critical(suma_parallel)
     suma_parallel += a[i];
-#pragma omp ordered
+    #pragma omp ordered
     printf("a[%2d]->W_%1d  \n",i,id_w); 
   }
 
-  printf("\nSuma wyrazĂłw tablicy rĂłwnolegle (z klauzulÄ - ....: %lf\n",
+  printf("\nSuma równolegle: %lf\n",
 	 suma_parallel);
 
 }
