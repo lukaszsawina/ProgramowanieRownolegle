@@ -72,7 +72,9 @@ int main ()
 
   for(i=0;i<n;i++) y[i]=0.0;
   t1=omp_get_wtime();
-  mat_vec_col(a,x,y,n); // mat_vec_col_col_decomp, mat_vec_col_row_decomp
+  //mat_vec_col(a,x,y,n); 
+  //mat_vec_col_col_decomp(a,x,y,n); 
+  mat_vec_col_row_decomp(a,x,y,n); 
   t1=omp_get_wtime()-t1;
   printf("time for one multiplication: %lf, Gflop/s: %lf, GB/s> %lf\n",  
 	 t1, 2.0e-9*ROZMIAR/t1, 8.0e-9*ROZMIAR/t1);

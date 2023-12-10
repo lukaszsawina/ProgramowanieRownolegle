@@ -61,18 +61,34 @@ void mat_vec_col_col_decomp(double* a, double* x, double* y, int n)
 {
   
   int i,j;
+#pragma omp parallel default(none) private(i, j) shared(a, x, y, n)
+{
+  double *y_local = malloc(n * sizeof(double));
 
-  for(i=0;i<n;i++) y[i]=0.0;
+   #pragma omp for
+    for(i = 0; i < n; i++) {
+        y_local[i] = 0.0;
+    }
+
+  #pragma omp for
   for(j=0;j<n;j++){
     for(i=0;i<n;i++){
-      y[i]+=a[i+j*n]*x[j];
+      y_local[i]+=a[i+j*n]*x[j];
     }
   }
+
+  #pragma omp critical
+  {
+      for(i = 0; i < n; i++) {
+          y[i] += y_local[i];
+      }
+  }
+}
+
 }
 
 void mat_vec_col_row_decomp(double* a, double* x, double* y, int n)
 {
-  
   int i,j;
 
   for(i=0;i<n;i++) y[i]=0.0;
