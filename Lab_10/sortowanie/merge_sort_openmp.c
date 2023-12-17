@@ -53,31 +53,20 @@ void merge_sort_openmp_2(
 /*++++++++++++++++ executable statements ++++++++++++++++*/
 
   if(p<r){
-    
-    if(poziom<4) printf("watek %d, poziom %d\n", omp_get_thread_num(),poziom);
-
     poziom++;
 
     int q1=(p+r)/2;
     
-    // modyfikacja 1 - uzycie klauzuli final tak jak w merge_sort_openmp()
 #pragma omp task final( poziom>max_poziom ) default(none) firstprivate(A,p,r,q1,poziom) 
     {
-      // modyfikacja 2 - w przypadku kiedy obowiązuje warunek z final (sprawdzenie
-      // funkcją omp_in_final() ) uruchomienie funkcji sortowania szybkiego
-      // z biblioteki sortowanie_seq: sortowanie_szybkie(A,p,q1);
       if(omp_in_final())
         sortowanie_szybkie(A,p,q1);
       else
         merge_sort_openmp_2(A,p,q1,poziom);
     }
 
-    // modyfikacja 1 - uzycie klauzuli final tak jak w merge_sort_openmp()
 #pragma omp task final( poziom>max_poziom ) default(none) firstprivate(A,p,r,q1,poziom) 
     {
-      // modyfikacja 2 - w przypadku kiedy obowiązuje warunek z final (sprawdzenie
-      // funkcją omp_in_final() ) uruchomienie funkcji sortowania szybkiego
-      // z biblioteki sortowanie_seq: sortowanie_szybkie(A,q1+1,r);
       if(omp_in_final())
         sortowanie_szybkie(A,q1+1,r);
       else
