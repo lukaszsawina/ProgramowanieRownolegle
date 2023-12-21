@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
         int position = 0; 
 
         MPI_Send(buffer, position, MPI_PACKED, 1, 0, MPI_COMM_WORLD);
-        printf("Proces %d wysłał liczbę %lf do procesu %d\n", rank, dane.val, dane.next);
+        printf("Proces %d wysłał wiadomość do procesu %d\n", rank, dane.next);
         dane.val = 1.0;
 
         } else if(rank == size-1) {
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
             MPI_Unpack(buffer, buffer_size, &position, &odebrane_dane.liczba_malych, 1, MPI_INT, MPI_COMM_WORLD);
             MPI_Unpack(buffer, buffer_size, &position, &odebrane_dane.liczba_spacji, 1, MPI_INT, MPI_COMM_WORLD);
 
-            printf("Proces %d odebrał liczbę %lf do procesu %d\n", rank, odebrane_dane.val, rank-1);
+            printf("Proces %d odebrał wiadomość do procesu %d\n", rank, rank-1);
 
             printf("Małych liter: %d, Dużych liter: %d, spacji: %d\n", odebrane_dane.liczba_malych, odebrane_dane.liczba_duzych, odebrane_dane.liczba_spacji);
 
@@ -83,8 +83,7 @@ int main(int argc, char **argv) {
             MPI_Unpack(buffer, buffer_size, &position, &odebrane_dane.liczba_spacji, 1, MPI_INT, MPI_COMM_WORLD);
 
 
-            printf("Proces %d odebrał liczbę %lf do procesu %d\n", rank, odebrane_dane.val, rank-1);
-            printf("%s\n", odebrane_dane.name);
+            printf("Proces %d odebrał wiadomość do procesu %d\n", rank, rank-1);
 
             switch (rank)
             {
@@ -102,7 +101,7 @@ int main(int argc, char **argv) {
                 {
                     for (int i = 0; odebrane_dane.name[i] != '\0'; ++i) {
                         
-                        if (!isupper(odebrane_dane.name[i])) {
+                        if (!isupper(odebrane_dane.name[i]) && odebrane_dane.name[i] != ',' && odebrane_dane.name[i] != '!' && odebrane_dane.name[i] != ' ') {
                             odebrane_dane.liczba_malych++;
                         }
                     }
@@ -144,7 +143,7 @@ int main(int argc, char **argv) {
             MPI_Pack(&dane.liczba_spacji, 1, MPI_INT, buffer, buffer_size, &position, MPI_COMM_WORLD);
 
             MPI_Send(buffer, position, MPI_PACKED, dane.next, 0, MPI_COMM_WORLD);
-            printf("Proces %d wysłał liczbę %lf do procesu %d\n", rank, dane.val, dane.next);
+            printf("Proces %d wysłał wiadomość do procesu %d\n", rank, dane.next);
         }
 
         sleep(1);

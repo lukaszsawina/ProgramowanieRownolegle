@@ -23,7 +23,7 @@ int main( int argc, char** argv ){
         if( rank == 0 ){ 
             if(value != 0)
             {
-                MPI_Recv( &value, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+                MPI_Recv( &value, 1, MPI_INT, size-1, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
                 printf("Proces %d odebrał liczbę %d do procesu %d\n", rank, value, size-1);
             } 
 
@@ -34,7 +34,7 @@ int main( int argc, char** argv ){
 
         } else if(rank == size-1) {
         
-            MPI_Recv( &value, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status );
+            MPI_Recv( &value, 1, MPI_INT, rank-1, MPI_ANY_TAG, MPI_COMM_WORLD, &status );
             printf("Proces %d odebrał liczbę %d do procesu %d\n", rank, value, rank-1);
 
             printf("Jestem ostani więc zamykam pierścien i idziemy od nowa \n");
@@ -45,7 +45,7 @@ int main( int argc, char** argv ){
         } else {
             dest=rank+1; tag=0; 
 
-            MPI_Recv( &value, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+            MPI_Recv( &value, 1, MPI_INT, rank-1, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
             printf("Proces %d odebrał liczbę %d do procesu %d\n", rank, value, rank-1);
 
             value++;

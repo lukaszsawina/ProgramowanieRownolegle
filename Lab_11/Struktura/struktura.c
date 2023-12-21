@@ -61,7 +61,7 @@ while(1){
         char buffer[buffer_size];
         int position = 0; 
 
-        MPI_Send(buffer, position, MPI_PACKED, 1, 0, MPI_COMM_WORLD);
+        MPI_Send(buffer, position, MPI_PACKED, dane.next, 0, MPI_COMM_WORLD);
         printf("Proces %d wysłał liczbę %lf do procesu %d\n", rank, dane.val, dane.next);
         dane.val = 1.0;
 
