@@ -186,29 +186,24 @@ main ( int argc, char** argv )
     
     // ... collective communication instead of the following point-to-point
 
-    // MPI_Gather(z, n_wier, MPI_DOUBLE, z, n_wier, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    if (rank > 0) {
-        MPI_Gather(z, n_wier, MPI_DOUBLE, MPI_IN_PLACE, n_wier, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    } else {
-        MPI_Gather(MPI_IN_PLACE, n_wier, MPI_DOUBLE, z, n_wier, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    }
+    MPI_Gather(z, n_wier, MPI_DOUBLE, z, n_wier, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    // if (rank > 0) {
+    //     MPI_Gather(z, n_wier, MPI_DOUBLE, z, n_wier, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    // } else {
+    //     MPI_Gather(MPI_IN_PLACE, n_wier, MPI_DOUBLE, z, n_wier, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    // }
 
 
     
     // point-to-point not optimal communication
     
-  //   if(rank>0){
-      
-  //     MPI_Send( z, n_wier, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD );
-      
-  //   } else {
-      
-  //     for(i=1;i<size;i++){
-	// MPI_Recv( &z[i*n_wier], n_wier, MPI_DOUBLE, i, tag, MPI_COMM_WORLD, &status  );
-	
-  //     }
-      
-  //   }
+    // if(rank>0){
+    //   MPI_Send( z, n_wier, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD );
+    // } else {
+    //   for(i=1;i<size;i++){
+	  //     MPI_Recv( &z[i*n_wier], n_wier, MPI_DOUBLE, i, tag, MPI_COMM_WORLD, &status  );
+    //   }
+    // }
 
       if(rank==0){
       
@@ -270,20 +265,10 @@ main ( int argc, char** argv )
     }
 
 
-    // I. Reduce - for each element of z reduction is necessary to get the final result
-    // Ia. version with loop over ranks and reductions for n_col long chunks
     MPI_Reduce(z, y, WYMIAR, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    // Ib. simple version with reductions for individual elements of z (loop over rows) 
-    // end I. Reduce
 
-    // II. All-to-all
-    // WARNING: All-to-all requires large MPI buffers (check matrix size WYMIAR in case of errors)
     MPI_Alltoall(MPI_IN_PLACE, n_col, MPI_DOUBLE, y, n_col, MPI_DOUBLE, MPI_COMM_WORLD);
-    // All-to-all requires also synchronisation
-    /* MPI_Barrier(MPI_COMM_WORLD); */
 
-    // Alltoall
-    // ...
     
     // All-to-all requires synchronisation also at this point
     MPI_Barrier(MPI_COMM_WORLD); 
